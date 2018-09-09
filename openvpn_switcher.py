@@ -36,6 +36,7 @@ class ServiceMonitor(object):
         '''
         cmd = 'sudo systemctl stop {}.service'.format(self.service).split()
         if self.status() == True:
+            print('Zatrzymuje serwis {}'.format(self.service.upper()))
             proc = subprocess.run(cmd,stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
             print('Serwis {} jest juz zatrzymany'.format(self.service.upper()))
