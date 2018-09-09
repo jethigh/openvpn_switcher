@@ -2,6 +2,9 @@
 
 import sys
 import subprocess
+import re
+
+CONFIG='/etc/openvpn/trustzone.conf'
 
 class ServiceMonitor(object):
     def __init__(self, service):
@@ -43,7 +46,7 @@ class ServiceMonitor(object):
 
     def restart(self):
         '''
-        Metode restartujaca serwis.
+        Metoda restartujaca serwis.
         W rzyczywistowsc wywoluje metody stop oraz start
         '''
         self.stop()
@@ -58,6 +61,7 @@ class TZ_Server(object):
         Funkcja zwraca True jezeli podany server jest w konfiguracji.
         W przeciwnym przypadku zwraca False
         '''
+        #with open(CONFIG, 'rw') as config:
 
 
 if __name__ == '__main__':
