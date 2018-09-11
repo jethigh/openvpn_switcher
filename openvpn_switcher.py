@@ -54,16 +54,23 @@ class ServiceMonitor(object):
 
 class TZ_Server(object):
     def __init__(self, server):
-        sefl.server = server
+        self.server = server
 
     def in_config(self):
         '''
         Funkcja zwraca True jezeli podany server jest w konfiguracji.
         W przeciwnym przypadku zwraca False
         '''
-        #with open(CONFIG, 'rw') as config:
+        with open(CONFIG, 'r') as config:
+            match = re.search(str(self.server), config)
+            if match:
+                return True
+            else:
+                return False
 
 
 if __name__ == '__main__':
     serwis = ServiceMonitor('cups')
-    serwis.restart()
+    server = TZ_Server('pl.trust.zone')
+    server.in_config()
+    #serwis.restart()
