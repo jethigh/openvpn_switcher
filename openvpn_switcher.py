@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import argparse
 import sys
 import subprocess
 import re
@@ -76,7 +77,7 @@ class TZ_Server(object):
 
     def set_config(self):
         '''
-        Metoda ustawia self.server konfiguracji OpenVPN jako aktywny
+        Metoda ustawia self.server w konfiguracji OpenVPN jako aktywny
         serwer
         '''
         new_content = ''
@@ -96,6 +97,8 @@ class TZ_Server(object):
         config.close()
 
 if __name__ == '__main__':
+    # Creating parser
+    parser = argparse.ArgumentParser(description='Program manipulating OpenVPN configuration.')
     serwis = ServiceMonitor('cups')
     server = TZ_Server('de.trust.zone')
     server.set_config()
