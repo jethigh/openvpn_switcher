@@ -76,23 +76,24 @@ class TZ_Server(object):
 
     def set_config(self):
         '''
-        Metoda ustawia te instancje klasy w konfiguracji OpenVPN jako aktywny
+        Metoda ustawia self.server konfiguracji OpenVPN jako aktywny
         serwer
         '''
         new_content = ''
         if self.in_config():
             print('Serwer ' + self.server + ' jest już w konfiguracji')
         else:
-            with open(CONFIG, 'r+') as config:
+            with open(CONFIG, 'r') as config:
                 for line in config:
                     if re.search(r'^remote ', line):
                         line = re.sub('remote .+ ','remote ' + self.server + ' ',line)
                         new_content += line
                     else:
                         new_content += line
-                print(new_content)
-                #config.write(new_content)
-
+            config.close()
+        with open(CONFIG, 'w') as config:
+            config.write(new_content)
+        config.close()
 
 if __name__ == '__main__':
     serwis = ServiceMonitor('cups')
