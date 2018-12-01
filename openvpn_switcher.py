@@ -25,29 +25,29 @@ class ServiceMonitor(object):
 
     def start(self):
         '''
-        Metoda uruchamia podany serwis
+        Metoda uruchamia podany service
         '''
         cmd = 'sudo systemctl start {}.service'.format(self.service).split()
         if self.status() == False:
-            print('Startuje serwis {}'.format(self.service.upper()))
+            print('Startuje service {}'.format(self.service.upper()))
             proc = subprocess.run(cmd,stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
-            print('Serwis {} jest juz uruchomiony'.format(self.service))
+            print('service {} jest juz uruchomiony'.format(self.service))
 
     def stop(self):
         '''
-        Metoda zatrzymuje podany serwis
+        Metoda zatrzymuje podany service
         '''
         cmd = 'sudo systemctl stop {}.service'.format(self.service).split()
         if self.status() == True:
-            print('Zatrzymuje serwis {}'.format(self.service.upper()))
+            print('Zatrzymuje service {}'.format(self.service.upper()))
             proc = subprocess.run(cmd,stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         else:
-            print('Serwis {} jest juz zatrzymany'.format(self.service.upper()))
+            print('service {} jest juz zatrzymany'.format(self.service.upper()))
 
     def restart(self):
         '''
-        Metoda restartujaca serwis.
+        Metoda restartujaca service.
         W rzyczywistowsc wywoluje metody stop oraz start
         '''
         self.stop()
@@ -92,14 +92,29 @@ class TZ_Server(object):
                     else:
                         new_content += line
             config.close()
-        with open(CONFIG, 'w') as config:
-            config.write(new_content)
-        config.close()
+            with open(CONFIG, 'w') as config:
+                config.write(new_content)
+            config.close()
 
 if __name__ == '__main__':
     # Creating parser
     parser = argparse.ArgumentParser(description='Program manipulating OpenVPN configuration.')
-    serwis = ServiceMonitor('cups')
-    server = TZ_Server('de.trust.zone')
-    server.set_config()
-    #serwis.restart()
+    parser.add_argument('-s','--server', help='Name of server that should be in OpenVPN config')
+    parser.add_argument('-r','--restart', help='Restart OpenVPN service', action='store_true')
+    parser.add_argument('-st','--status', help='Restart OpenVPN service', action='store_true')
+    parser.add_argument('--stop', help='Stop OpenVPN service', action='store_true')
+    parser.add_argument('--start', help='Start OpenVPN service', action='store_true')
+    args  = parser.parse_args()
+
+    service = ServiceMonitor('openvpn')
+    vpn_server = TZ_Server(args.server)
+    if args.server:
+        vpn_server.set_config()
+    if args.restart:
+           service.restart()
+    if args.status:
+        print(service.status())
+    if args.stop:
+        service.stop()
+    if args.start:
+        service.start()
