@@ -111,6 +111,9 @@ class SystemdServiceManager:
         except FileNotFoundError as exc:
             self.last_output = f"Command '{cmd[0]}' not found on this system: {exc}"
             return False
+        except PermissionError as exc:
+            self.last_output = f"Permission denied executing '{' '.join(cmd)}': {exc}"
+            return False
         except OSError as exc:
             self.last_output = f"Failed to execute command '{' '.join(cmd)}': {exc}"
             return False

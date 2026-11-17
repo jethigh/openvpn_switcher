@@ -7,6 +7,11 @@ from openvpn_switcher.core.catalog import (
     get_ports_for_protocol,
 )
 from openvpn_switcher.core.config import ConfigManager
+from openvpn_switcher.core.logs import (
+    JournalctlLogStreamer,
+    LogStreamer,
+    MockLogStreamer,
+)
 from openvpn_switcher.core.models import (
     PROTOCOL_PORTS,
     ProtocolType,
@@ -23,6 +28,9 @@ from openvpn_switcher.core.template import TemplateManager
 
 __all__ = [
     "ConfigManager",
+    "JournalctlLogStreamer",
+    "LogStreamer",
+    "MockLogStreamer",
     "MockServiceManager",
     "PROTOCOL_PORTS",
     "ProtocolType",
