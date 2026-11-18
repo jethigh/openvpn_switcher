@@ -146,25 +146,33 @@ class SystemdServiceManager:
 class MockServiceManager:
     """Mock implementation of ServiceManager for testing and emulation."""
 
-    def __init__(self, initial_status: bool = False) -> None:
+    def __init__(self, initial_status: bool = False, should_fail: bool = False) -> None:
         """Initialize MockServiceManager.
 
         Args:
             initial_status: Initial running state of the mock service.
+            should_fail: If True, commands simulate failure.
         """
         self._running: bool = initial_status
+        self.should_fail: bool = should_fail
         self.last_output: str = ""
         self.call_history: List[str] = []
 
     def status(self) -> bool:
         """Return current simulated status."""
         self.call_history.append("status")
+        if self.should_fail:
+            self.last_output = "Failed to query status."
+            return False
         self.last_output = "active" if self._running else "inactive"
         return self._running
 
     def start(self) -> bool:
         """Simulate starting the service."""
         self.call_history.append("start")
+        if self.should_fail:
+            self.last_output = "Job failed for openvpn.service."
+            return False
         self._running = True
         self.last_output = "Service started successfully."
         return True
@@ -172,6 +180,9 @@ class MockServiceManager:
     def stop(self) -> bool:
         """Simulate stopping the service."""
         self.call_history.append("stop")
+        if self.should_fail:
+            self.last_output = "Failed to stop openvpn.service."
+            return False
         self._running = False
         self.last_output = "Service stopped successfully."
         return True
@@ -179,6 +190,9 @@ class MockServiceManager:
     def restart(self) -> bool:
         """Simulate restarting the service."""
         self.call_history.append("restart")
+        if self.should_fail:
+            self.last_output = "Failed to restart openvpn.service."
+            return False
         self._running = True
         self.last_output = "Service restarted successfully."
         return True
